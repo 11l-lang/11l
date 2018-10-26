@@ -1,1 +1,1 @@
-@python 11l.py %*
+@python "%~dp011l.py" %*

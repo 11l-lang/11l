@@ -1,1 +1,3 @@
-python3 11l.py "$@"
+# ‘"$@"’ is from here[https://stackoverflow.com/questions/3811345/how-to-pass-all-arguments-passed-to-my-bash-script-to-a-function-of-mine <- google:‘bash pass arguments’]
+# ‘${0%/*}’ is from here[https://stackoverflow.com/questions/207959/equivalent-of-dp0-in-sh <- google:‘bash analog dp0 bat’]
+python3 ${0%/*}/11l.py "$@"
