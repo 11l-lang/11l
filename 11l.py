@@ -38,8 +38,9 @@ else:
     _11l_fname = sys.argv[1]
     _11l_code = open(sys.argv[1], encoding = 'utf-8-sig').read()
 
+cpp_code = '#include "' + os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp') + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
 try:
-    cpp_code = _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname)
+    cpp_code += _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True)
 except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
     open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
     show_error(_11l_fname, _11l_code, e)
@@ -63,4 +64,4 @@ If you do not have Visual Studio 2017 installed please install it or Build Tools
 else:
     if os.system('g++-8 --version > /dev/null') != 0:
         sys.exit('GCC 8 is not found!')
-    #g++-8 -std=c++17 -lstdc++fs -Wfatal-errors -DNDEBUG -O3 -march=native
+    os.system('g++-8 -std=c++17 -Wfatal-errors -DNDEBUG -O3 -march=native -o "' + os.path.splitext(sys.argv[1])[0] + '" "' + cpp_fname + '" -lstdc++fs')
