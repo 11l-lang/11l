@@ -38,7 +38,7 @@ else:
     _11l_fname = sys.argv[1]
     _11l_code = open(sys.argv[1], encoding = 'utf-8-sig').read()
 
-cpp_code = '#include "' + os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp') + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
+cpp_code = '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp')) + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
 try:
     cpp_code += _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True)
 except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
