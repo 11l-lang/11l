@@ -20,7 +20,7 @@ def show_error(fname, fcontents, e):
     if next_line_pos == -1:
         next_line_pos = len(fcontents)
     prev_line_pos = fcontents.rfind("\n", 0, e.pos) + 1
-    sys.exit("Error '" + e.message + "'\n in file '" + fname + "', line " + str(fcontents[:e.pos].count("\n") + 1) + ":\n"
+    sys.exit('Error: ' + e.message + "\n in file '" + fname + "', line " + str(fcontents[:e.pos].count("\n") + 1) + "\n"
            + fcontents[prev_line_pos:next_line_pos] + "\n" + re.sub(r'[^\t]', ' ', fcontents[prev_line_pos:e.pos]) + '^'*max(1, e.end - e.pos))
 
 import _11l_to_cpp.tokenizer, _11l_to_cpp.parse
