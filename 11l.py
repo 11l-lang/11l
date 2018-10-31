@@ -8,9 +8,14 @@ try:
 except ImportError:
     sys.exit("Module thindf is not installed!\nPlease install it using this command:\n" + (sys.platform == 'win32')*(os.path.dirname(sys.executable) + '\\Scripts\\') + 'pip3 install thindf')
 
-if len(sys.argv) < 2:
-    print('Usage: 11l py-or-11l-source-file')
+if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
+    print('''Usage: 11l py-or-11l-source-file [-d]
+
+Options:
+  -d                    disable optimizations''')
     sys.exit(1)
+
+enopt = not '-d' in sys.argv
 
 if not (sys.argv[1].endswith('.py') or sys.argv[1].endswith('.11l')):
     sys.exit("source-file should have extension '.py' or '.11l'")
@@ -59,9 +64,9 @@ if sys.platform == 'win32':
         sys.exit('''Unable to find vcvarsall.bat!
 If you do not have Visual Studio 2017 installed please install it or Build Tools for Visual Studio 2017 from here[https://visualstudio.microsoft.com/downloads/].''')
 
-    os.system('"' + vcvarsall + '" x64 > nul && cl.exe /std:c++17 /O2 /MT /EHsc /nologo ' + cpp_fname)
+    os.system('"' + vcvarsall + '" x64 > nul && cl.exe /std:c++17 /MT /EHsc /nologo ' + '/O2 '*enopt + cpp_fname)
 
 else:
     if os.system('g++-8 --version > /dev/null') != 0:
         sys.exit('GCC 8 is not found!')
-    os.system('g++-8 -std=c++17 -Wfatal-errors -DNDEBUG -O3 -march=native -o "' + os.path.splitext(sys.argv[1])[0] + '" "' + cpp_fname + '" -lstdc++fs')
+    os.system('g++-8 -std=c++17 -Wfatal-errors -DNDEBUG ' + '-O3 '*enopt + '-march=native -o "' + os.path.splitext(sys.argv[1])[0] + '" "' + cpp_fname + '" -lstdc++fs')
