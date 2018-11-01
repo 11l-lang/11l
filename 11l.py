@@ -38,7 +38,7 @@ if sys.argv[1].endswith('.py'):
     except (python_to_11l.parse.Error, python_to_11l.tokenizer.Error) as e:
         show_error(sys.argv[1], py_source, e)
     _11l_fname = os.path.splitext(sys.argv[1])[0] + '.11l'
-    # open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
+    open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
 else:
     _11l_fname = sys.argv[1]
     _11l_code = open(sys.argv[1], encoding = 'utf-8-sig').read()
@@ -47,7 +47,7 @@ cpp_code = '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[
 try:
     cpp_code += _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True)
 except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
-    open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
+    # open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
     show_error(_11l_fname, _11l_code, e)
 
 cpp_fname = os.path.splitext(sys.argv[1])[0] + '.cpp'
