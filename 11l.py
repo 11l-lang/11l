@@ -12,7 +12,7 @@ if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
     print('''Usage: 11l py-or-11l-source-file [-d]
 
 Options:
-  -d                    disable optimizations''')
+  -d                    disable optimizations [makes compilation faster]''')
     sys.exit(1)
 
 enopt = not '-d' in sys.argv
