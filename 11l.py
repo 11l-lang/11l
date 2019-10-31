@@ -9,10 +9,11 @@ except ImportError:
     sys.exit("Module thindf is not installed!\nPlease install it using this command:\n" + (sys.platform == 'win32')*(os.path.dirname(sys.executable) + '\\Scripts\\') + 'pip3 install thindf')
 
 if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
-    print('''Usage: 11l py-or-11l-source-file [-d]
+    print('''Usage: 11l py-or-11l-source-file [-d]|[-t]
 
 Options:
-  -d                    disable optimizations [makes compilation faster]''')
+  -d                    disable optimizations [makes compilation faster]
+  -t                    transpile only''')
     sys.exit(1)
 
 enopt = not '-d' in sys.argv
@@ -52,6 +53,9 @@ except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
 
 cpp_fname = os.path.splitext(sys.argv[1])[0] + '.cpp'
 open(cpp_fname, 'w', encoding = 'utf-8-sig', newline = "\n").write(cpp_code) # utf-8-sig is for MSVC
+
+if '-t' in sys.argv:
+    sys.exit()
 
 if sys.platform == 'win32':
     was_break = False
