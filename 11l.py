@@ -13,7 +13,8 @@ if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
 
 Options:
   -d                    disable optimizations [makes compilation faster]
-  -t                    transpile only''')
+  -t                    transpile only
+  -e                    expand includes''')
     sys.exit(1)
 
 enopt = not '-d' in sys.argv
@@ -51,10 +52,49 @@ except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
     # open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
     show_error(_11l_fname, _11l_code, e, type(e) == _11l_to_cpp.parse.Error)
 
+if '-e' in sys.argv:
+    included = set()
+
+    def process_include_directives(src_code, dir = ''):
+        exp_code = ''
+        writepos = 0
+        while True:
+            i = src_code.find('#include "', writepos)
+            if i == -1:
+                break
+
+            exp_code += src_code[writepos:i]
+            if src_code[i-2:i] == '//': # skip commented includes
+                exp_code += '#'
+                writepos = i + 1
+                continue
+
+            fname_start = i + len('#include "')
+            fname_end = src_code.find('"', fname_start)
+            assert(src_code[fname_end + 1] == "\n") # [-TODO: Add support of comments after #include directives-]
+
+            fname = src_code[fname_start:fname_end]
+            if fname[1:3] == ':\\' or fname.startswith('/'): # this is an absolute pathname
+                pass
+            else: # this is a relative pathname
+                assert(dir != '')
+                fname = os.path.join(dir, fname)
+
+            if fname not in included:
+                included.add(fname)
+                exp_code += process_include_directives(open(fname, encoding = 'utf-8-sig').read(), os.path.dirname(fname))
+
+            writepos = fname_end + 1
+        exp_code += src_code[writepos:]
+        return exp_code
+
+    cpp_code = process_include_directives(cpp_code)
+
 cpp_fname = os.path.splitext(sys.argv[1])[0] + '.cpp'
 open(cpp_fname, 'w', encoding = 'utf-8-sig', newline = "\n").write(cpp_code) # utf-8-sig is for MSVC
 
-if '-t' in sys.argv:
+if '-t' in sys.argv or \
+   '-e' in sys.argv:
     sys.exit()
 
 if sys.platform == 'win32':
