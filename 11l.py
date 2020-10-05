@@ -14,8 +14,13 @@ if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
 Options:
   -d                    disable optimizations [makes compilation faster]
   -t                    transpile only
-  -e                    expand includes''')
+  -e                    expand includes
+  -v                    print version''')
     sys.exit(1)
+
+if '-v' in sys.argv:
+    print(open(os.path.join(os.path.dirname(sys.argv[0]), 'version.txt')).read())
+    sys.exit(0)
 
 enopt = not '-d' in sys.argv
 
@@ -81,11 +86,8 @@ if '-e' in sys.argv:
                 fname = os.path.join(dir, fname)
 
             if fname not in included:
-                if fname.endswith('/hm.h'):
-                    fname = os.path.join(os.path.dirname(fname), 'vec.h')
                 included.add(fname)
-                if not fname.endswith('/perf_ext.h'):
-                    exp_code += process_include_directives(open(fname, encoding = 'utf-8-sig').read(), os.path.dirname(fname))
+                exp_code += process_include_directives(open(fname, encoding = 'utf-8-sig').read(), os.path.dirname(fname))
 
             writepos = fname_end + 1
         exp_code += src_code[writepos:]
