@@ -4,9 +4,9 @@ if not sys.version_info >= (3, 6):
     sys.exit('Python 3.6 or higher is required!')
 
 try:
-    import thindf
+    import eldf
 except ImportError:
-    sys.exit("Module thindf is not installed!\nPlease install it using this command:\n" + (sys.platform == 'win32')*(os.path.dirname(sys.executable) + '\\Scripts\\') + 'pip3 install thindf')
+    sys.exit("Module eldf is not installed!\nPlease install it using this command:\n" + (sys.platform == 'win32')*(os.path.dirname(sys.executable) + '\\Scripts\\') + 'pip3 install eldf')
 
 if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
     print('''Usage: 11l py-or-11l-source-file [options]

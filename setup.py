@@ -11,7 +11,7 @@ setuptools.setup(
     author_email = 'alextretyak@users.noreply.github.com',
     url = 'http://11l-lang.org',
     license = 'MIT',
-    install_requires = ['thindf'],
+    install_requires = ['eldf'],
     classifiers = [
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
