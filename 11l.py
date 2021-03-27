@@ -1,4 +1,4 @@
-import sys, platform, os, re
+import sys, platform, os, re, subprocess
 
 if not sys.version_info >= (3, 6):
     sys.exit('Python 3.6 or higher is required!')
@@ -125,6 +125,14 @@ If you do not have Visual Studio 2017 or 2019 installed please install it or Bui
     os.system('"' + vcvarsall + '" ' + ('x64' if platform.machine().endswith('64') else 'x86') + ' > nul && cl.exe /std:c++17 /MT /EHsc /nologo /W3 ' + '/O2 '*enopt + cpp_fname)
 
 else:
-    if os.system('g++-8 --version > /dev/null') != 0:
-        sys.exit('GCC 8 is not found!')
-    os.system('g++-8 -std=c++17 -Wfatal-errors -DNDEBUG ' + '-O3 '*enopt + '-march=native -o "' + os.path.splitext(sys.argv[1])[0] + '" "' + cpp_fname + '" -lstdc++fs')
+    if int(subprocess.check_output(['g++', '-dumpversion'], encoding = 'utf-8').split('.')[0]) >= 8:
+        gpp = 'g++'
+    else:
+        for n in range(8, 100):
+            gpp = 'g++-' + str(n)
+            if os.system(gpp + ' --version > /dev/null') == 0:
+                break
+        else:
+            sys.exit('At least GCC 8 is required!')
+
+    os.system(gpp + ' -std=c++17 -Wfatal-errors -DNDEBUG ' + '-O3 '*enopt + '-march=native -o "' + os.path.splitext(sys.argv[1])[0] + '" "' + cpp_fname + '" -lstdc++fs')
