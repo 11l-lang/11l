@@ -122,7 +122,7 @@ if sys.platform == 'win32':
         sys.exit('''Unable to find vcvarsall.bat!
 If you do not have Visual Studio 2017 or 2019 installed please install it or Build Tools for Visual Studio from here[https://visualstudio.microsoft.com/downloads/].''')
 
-    os.system('"' + vcvarsall + '" ' + ('x64' if platform.machine().endswith('64') else 'x86') + ' > nul && cl.exe /std:c++17 /MT /EHsc /nologo /W3 ' + '/O2 '*enopt + cpp_fname)
+    os.system('"' + vcvarsall + '" ' + ('x64' if platform.machine().endswith('64') else 'x86') + ' > nul && cl.exe /std:c++17 /MT /EHsc /nologo /W3 /we4239 ' + '/O2 '*enopt + cpp_fname)
 
 else:
     if int(subprocess.check_output(['g++', '-dumpversion'], encoding = 'utf-8').split('.')[0]) >= 8:
