@@ -13,6 +13,7 @@ if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
 
 Options:
   --int64               use 64-bit integers
+  --python-division     use Python 3 style division
   -d                    disable optimizations [makes compilation faster]
   -t                    transpile only
   -e                    expand includes
@@ -55,6 +56,8 @@ cpp_code = ''
 if '--int64' in sys.argv:
     cpp_code += "#define INT_IS_INT64\n"
     _11l_to_cpp.parse.int_is_int64 = True
+if '--python-division' in sys.argv:
+    _11l_to_cpp.parse.python_division = True
 cpp_code += '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp')) + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
 try:
     cpp_code += _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True)
