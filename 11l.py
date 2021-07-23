@@ -28,7 +28,7 @@ if '-v' in sys.argv:
 enopt = not '-d' in sys.argv
 
 if not (sys.argv[1].endswith('.py') or sys.argv[1].endswith('.11l')):
-    sys.exit("source-file should have extension '.py' or '.11l'")
+    sys.exit("source file should have extension '.py' or '.11l'")
 
 def show_error(fname, fcontents, e, syntax_error):
     next_line_pos = fcontents.find("\n", e.pos)
