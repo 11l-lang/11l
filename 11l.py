@@ -46,7 +46,10 @@ if sys.argv[1].endswith('.py'):
     try:
         _11l_code = python_to_11l.parse.parse_and_to_str(python_to_11l.tokenizer.tokenize(py_source), py_source, sys.argv[1])
     except (python_to_11l.parse.Error, python_to_11l.tokenizer.Error) as e:
-        show_error(sys.argv[1], py_source, e, type(e) == python_to_11l.parse.Error)
+        (fname, fcontents) = (sys.argv[1], py_source)
+        if type(e) == python_to_11l.parse.Error and python_to_11l.parse.file_name != '':
+            (fname, fcontents) = (python_to_11l.parse.file_name, python_to_11l.parse.source)
+        show_error(fname, fcontents, e, type(e) == python_to_11l.parse.Error)
     _11l_fname = os.path.splitext(sys.argv[1])[0] + '.11l'
     open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
 else:
@@ -66,7 +69,10 @@ try:
     cpp_code += _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True)
 except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
     # open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
-    show_error(_11l_fname, _11l_code, e, type(e) == _11l_to_cpp.parse.Error)
+    (fname, fcontents) = (_11l_fname, _11l_code)
+    if type(e) == _11l_to_cpp.parse.Error and _11l_to_cpp.parse.file_name != '':
+        (fname, fcontents) = (_11l_to_cpp.parse.file_name, _11l_to_cpp.parse.source)
+    show_error(fname, fcontents, e, type(e) == _11l_to_cpp.parse.Error)
 
 if '-e' in sys.argv:
     included = set()
