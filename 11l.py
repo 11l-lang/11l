@@ -12,11 +12,12 @@ if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
     print('''Usage: 11l py-or-11l-source-file [options]
 
 Options:
-  --int64                         use 64-bit integers
   --python-division               use Python 3 style division
   --python-remainder              use Python style remainder
   --python-negative-indexing      support `a[k]` for k < 0 (`a[-...]` is supported anyway)
   --public-set-copy-constructor   unprivate Set copy constructor (if there are problems with default behaviour)
+  --max-compat-with-python        sets all [4] options above
+  --int64                         use 64-bit integers
   -d                              disable optimizations [makes compilation faster]
   -t                              transpile only
   -e                              expand includes
@@ -62,13 +63,13 @@ cpp_code = ''
 if '--int64' in sys.argv:
     cpp_code += "#define INT_IS_INT64\n"
     _11l_to_cpp.parse.int_is_int64 = True
-if '--python-division' in sys.argv:
+if '--python-division' in sys.argv or '--max-compat-with-python' in sys.argv:
     _11l_to_cpp.parse.python_division = True
-if '--python-remainder' in sys.argv:
+if '--python-remainder' in sys.argv or '--max-compat-with-python' in sys.argv:
     cpp_code += "#define PYTHON_REMAINDER\n"
-if '--python-negative-indexing' in sys.argv:
+if '--python-negative-indexing' in sys.argv or '--max-compat-with-python' in sys.argv:
     cpp_code += "#define PYTHON_NEGATIVE_INDEXING\n"
-if '--public-set-copy-constructor' in sys.argv:
+if '--public-set-copy-constructor' in sys.argv or '--max-compat-with-python' in sys.argv:
     cpp_code += "#define PUBLIC_SET_COPY_CONSTRUCTOR\n"
 cpp_code += '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp')) + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
 try:
