@@ -12,14 +12,15 @@ if len(sys.argv) < 2 or '-h' in sys.argv or '--help' in sys.argv:
     print('''Usage: 11l py-or-11l-source-file [options]
 
 Options:
-  --int64                      use 64-bit integers
-  --python-division            use Python 3 style division
-  --python-remainder           use Python style remainder
-  --python-negative-indexing   support `a[k]` for k < 0 (`a[-...]` is supported anyway)
-  -d                           disable optimizations [makes compilation faster]
-  -t                           transpile only
-  -e                           expand includes
-  -v                           print version''')
+  --int64                         use 64-bit integers
+  --python-division               use Python 3 style division
+  --python-remainder              use Python style remainder
+  --python-negative-indexing      support `a[k]` for k < 0 (`a[-...]` is supported anyway)
+  --public-set-copy-constructor   unprivate Set copy constructor (if there are problems with default behaviour)
+  -d                              disable optimizations [makes compilation faster]
+  -t                              transpile only
+  -e                              expand includes
+  -v                              print version''')
     sys.exit(1)
 
 if '-v' in sys.argv:
@@ -67,6 +68,8 @@ if '--python-remainder' in sys.argv:
     cpp_code += "#define PYTHON_REMAINDER\n"
 if '--python-negative-indexing' in sys.argv:
     cpp_code += "#define PYTHON_NEGATIVE_INDEXING\n"
+if '--public-set-copy-constructor' in sys.argv:
+    cpp_code += "#define PUBLIC_SET_COPY_CONSTRUCTOR\n"
 cpp_code += '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp')) + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
 try:
     cpp_code += _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True)
