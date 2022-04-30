@@ -131,7 +131,7 @@ if '-t' in sys.argv or \
 
 if sys.platform == 'win32':
     was_break = False
-    for version in ['2019', '2017']:
+    for version in ['2022', '2019', '2017']:
         for edition in ['BuildTools', 'Community', 'Enterprise', 'Professional']:
             vcvarsall = 'C:\\Program Files' + ' (x86)'*platform.machine().endswith('64') + '\\Microsoft Visual Studio\\' + version + '\\' + edition + R'\VC\Auxiliary\Build\vcvarsall.bat'
             if os.path.isfile(vcvarsall):
@@ -142,7 +142,7 @@ if sys.platform == 'win32':
             break
     if not was_break:
         sys.exit('''Unable to find vcvarsall.bat!
-If you do not have Visual Studio 2017 or 2019 installed please install it or Build Tools for Visual Studio from here[https://visualstudio.microsoft.com/downloads/].''')
+If you do not have Visual Studio 2017, 2019 or 2022 installed please install it or Build Tools for Visual Studio from here[https://visualstudio.microsoft.com/downloads/].''')
 
     os.system('"' + vcvarsall + '" ' + ('x64' if platform.machine().endswith('64') else 'x86') + ' > nul && cl.exe /std:c++17 /MT /EHsc /nologo /W3 /we4239 ' + '/O2 '*enopt + cpp_fname)
 
