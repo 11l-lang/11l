@@ -15,6 +15,8 @@ for root, dirs, files in os.walk('_11l_to_cpp/tests'):
             print("Removed '" + os.path.join(root, name) + "'")
 
 os.system(r'copy ..\eldf\eldf.py .')
+os.system(r'copy ..\eldf\eldf.py python_to_11l')
+os.system(r'copy ..\eldf\eldf.py _11l_to_cpp')
 
 if os.system('7z a -mx9 -xr!__pycache__ -xr!.mypy_cache -xr!.vs -xr!build -xr!*.exe -xr!*.obj -xr!*.out -xr!*.html -xr!*.pyd -xr!*.pyx -xr!*.pyproj -xr!*.sln -- 11l.tar 11l 11l.cmd 11l.py eldf.py LICENSE.txt version.txt python_to_11l/*.py python_to_11l/tests/* _11l_to_cpp/*.py _11l_to_cpp/tests/* _11l_to_cpp/11l.hpp _11l_to_cpp/11l_hpp/*') != 0:
     sys.exit('7z failed')
