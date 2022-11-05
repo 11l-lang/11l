@@ -152,7 +152,7 @@ else:
     else:
         for n in range(8, 100):
             gpp = 'g++-' + str(n)
-            if os.system(gpp + ' --version > /dev/null') == 0:
+            if os.system(gpp + ' --version > /dev/null 2>&1') == 0:
                 break
         else:
             sys.exit('At least GCC 8 is required!')
