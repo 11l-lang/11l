@@ -147,14 +147,14 @@ If you do not have Visual Studio 2017, 2019 or 2022 installed please install it 
     sys.exit(os.system('"' + vcvarsall + '" ' + ('x64' if platform.machine().endswith('64') else 'x86') + ' > nul && cl.exe /std:c++17 /MT /EHsc /nologo /W3 /we4239 ' + '/O2 '*enopt + cpp_fname))
 
 else:
-    if int(subprocess.check_output(['g++', '-dumpversion'], encoding = 'utf-8').split('.')[0]) >= 8:
+    if int(subprocess.check_output(['g++', '-dumpversion'], encoding = 'utf-8').split('.')[0]) >= 9:
         gpp = 'g++'
     else:
-        for n in range(8, 100):
+        for n in range(9, 100):
             gpp = 'g++-' + str(n)
             if os.system(gpp + ' --version > /dev/null 2>&1') == 0:
                 break
         else:
-            sys.exit('At least GCC 8 is required!')
+            sys.exit('At least GCC 9 is required!')
 
     sys.exit(os.system(gpp + ' -std=c++17 -Wfatal-errors -DNDEBUG ' + '-O3 '*enopt + '-march=native -o "' + os.path.splitext(sys.argv[1])[0] + '" "' + cpp_fname + '" -lstdc++fs'))
