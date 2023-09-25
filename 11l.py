@@ -74,15 +74,23 @@ if '--python-negative-indexing' in sys.argv or '--max-compat-with-python' in sys
     cpp_code += "#define PYTHON_NEGATIVE_INDEXING\n"
 if '--public-set-copy-constructor' in sys.argv or '--max-compat-with-python' in sys.argv:
     cpp_code += "#define PUBLIC_SET_COPY_CONSTRUCTOR\n"
-cpp_code += '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp')) + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
+cpp_code_inc = '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp')) + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
+used_builtin_modules = set()
 try:
-    cpp_code += _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True)
+    cpp_code_body = _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True, used_builtin_modules = used_builtin_modules)
 except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
     # open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
     (fname, fcontents) = (_11l_fname, _11l_code)
     if type(e) == _11l_to_cpp.parse.Error and _11l_to_cpp.parse.file_name != '':
         (fname, fcontents) = (_11l_to_cpp.parse.file_name, _11l_to_cpp.parse.source)
     show_error(fname, fcontents, e, type(e) == _11l_to_cpp.parse.Error)
+
+if len(used_builtin_modules):
+    if 're' in used_builtin_modules: cpp_code += "#define INCLUDE_RE\n"
+    if 'fs' in used_builtin_modules: cpp_code += "#define INCLUDE_FS\n"
+    if 'eldf' in used_builtin_modules or 'json' in used_builtin_modules: cpp_code += "#define INCLUDE_LDF\n"
+cpp_code += cpp_code_inc
+cpp_code += cpp_code_body
 
 if '-e' in sys.argv:
     included = set()
