@@ -88,6 +88,7 @@ except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
 if len(used_builtin_modules):
     if 're' in used_builtin_modules: cpp_code += "#define INCLUDE_RE\n"
     if 'fs' in used_builtin_modules: cpp_code += "#define INCLUDE_FS\n"
+    if 'csv' in used_builtin_modules: cpp_code += "#define INCLUDE_CSV\n"
     if 'eldf' in used_builtin_modules or 'json' in used_builtin_modules: cpp_code += "#define INCLUDE_LDF\n"
 cpp_code += cpp_code_inc
 cpp_code += cpp_code_body
