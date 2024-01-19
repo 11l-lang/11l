@@ -1,4 +1,4 @@
-import sys, platform, os, re, subprocess
+import sys, platform, os, re, subprocess, codecs
 
 if not sys.version_info >= (3, 6):
     sys.exit('Python 3.6 or higher is required!')
@@ -77,7 +77,18 @@ if '--public-set-copy-constructor' in sys.argv or '--max-compat-with-python' in 
 cpp_code_inc = '#include "' + os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '_11l_to_cpp', '11l.hpp')) + "\"\n\n" # replace("\\", "\\\\") is not necessary here (because MSVC for some reason treat backslashes in include path differently than in regular string literals)
 used_builtin_modules = set()
 try:
-    cpp_code_body = _11l_to_cpp.parse.parse_and_to_str(_11l_to_cpp.tokenizer.tokenize(_11l_code), _11l_code, _11l_fname, append_main = True, used_builtin_modules = used_builtin_modules)
+    tokens = _11l_to_cpp.tokenizer.tokenize(_11l_code)
+    if _11l_to_cpp.tokenizer.needs_source_code_correction(tokens, _11l_code):
+        if sys.argv[1].endswith('.py'):
+            sys.exit('python_to_11l output needs source code correction!')
+        has_bom = open(sys.argv[1], 'rb').read(3) == codecs.BOM_UTF8 # [https://stackoverflow.com/questions/13590749/reading-unicode-file-data-with-bom-chars-in-python <- google:‘python detect utf8 sig’]
+        _11l_code = _11l_to_cpp.tokenizer.correct_source_code(tokens, _11l_code)
+        open(_11l_fname, 'w', encoding = 'utf-8' + '-sig'*has_bom, newline = "\n").write(_11l_code)
+        tokens = _11l_to_cpp.tokenizer.tokenize(_11l_code)
+        assert not _11l_to_cpp.tokenizer.needs_source_code_correction(tokens, _11l_code)
+
+    cpp_code_body = _11l_to_cpp.parse.parse_and_to_str(tokens, _11l_code, _11l_fname, append_main = True, used_builtin_modules = used_builtin_modules)
+
 except (_11l_to_cpp.parse.Error, _11l_to_cpp.tokenizer.Error) as e:
     # open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
     (fname, fcontents) = (_11l_fname, _11l_code)
