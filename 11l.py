@@ -31,8 +31,8 @@ if '-v' in sys.argv:
 
 enopt = not '-d' in sys.argv
 
-if not (sys.argv[1].endswith('.py') or sys.argv[1].endswith('.11l')):
-    sys.exit("source file should have extension '.py' or '.11l'")
+if not sys.argv[1].endswith(('.py', '.11l', '.911')):
+    sys.exit("source file should have extension '.py' or '.11l' or '.911'")
 
 def show_error(fname, fcontents, e, syntax_error):
     next_line_pos = fcontents.find("\n", e.pos)
@@ -59,6 +59,10 @@ if sys.argv[1].endswith('.py'):
 else:
     _11l_fname = sys.argv[1]
     _11l_code = open(sys.argv[1], encoding = 'utf-8-sig').read()
+    if _11l_fname.endswith('.911'):
+        _11l_code = ": = 9:\n\n" + _11l_code
+        _11l_fname += '.11l'
+        open(_11l_fname, 'w', encoding = 'utf-8', newline = "\n").write(_11l_code)
 
 cpp_code = ''
 if '--int64' in sys.argv:
